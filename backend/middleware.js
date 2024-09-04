@@ -5,8 +5,8 @@ const jwt = require("jsonwebtoken")
 const authMiddleware = (req, res, next) =>{
     const authHeader = req.headers.authorization;
 
-    if (!authHeader || authHeader.startWith("Bearer ")){
-        return res.status(403).json({})
+    if (!authHeader || !authHeader.startsWith('Bearer ')){
+        return res.status(403).json({message: "invalid"})
     }
 
     const token = authHeader.split(' ')[1]
@@ -18,11 +18,11 @@ const authMiddleware = (req, res, next) =>{
             req.UserId = decoded.UserId 
             next()
         } else {
-            return res.status(403).json({})
+            return res.status(403).json({message: "invalid"})
         }
     } catch(e){
         return res.status(403).json({
-            error: e 
+            error: e.message 
         })
     }
 
