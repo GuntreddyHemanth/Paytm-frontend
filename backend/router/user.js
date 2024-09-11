@@ -58,6 +58,8 @@ router.post("/signup", async (req, res) => {
         token: token
     })
 
+    console.log("hi here")
+
 })
 
 const signinBody = zod.object({
@@ -70,7 +72,7 @@ router.post("/signin", async (req, res) => {
     const {success} = signinBody.safeParse(body)
 
     if (!success){
-        res.status(411).json({
+        return res.status(411).json({
             message: "Incorrect Inputs"
         })
     }
@@ -85,14 +87,12 @@ router.post("/signin", async (req, res) => {
             UserId: user._id
         }, JWt_SECRET)
 
-        res.json({
+        return res.json({
             token: token
-        })
-
-        return 
+        }) 
     }
 
-    res.json({
+    return res.json({
         message: "Error While logging in"
     })
 
@@ -124,28 +124,57 @@ router.put("/", authMiddleware, async (req, res) => {
 })
 
 
+// router.get("/bulk", authMiddleware, async (req, res) => {
+//     const filter = req.query.filter
+
+//     const users = await User.find({
+//         $or: [
+//             {
+//                 "first_name":{$regex: `${filter}`}
+//             }, 
+//             {
+//                 "last_name": {$regex: `${filter}`}
+//             }
+//         ]
+//     })
+
+//     res.json({
+//         user: users.map(user => ({
+//             user_email: user.user_email,
+//             first_name: user.first_name,
+//             last_name: user.last_name,
+//             _id: user._id
+//         }))
+//     })
+// })
+
 router.get("/bulk", authMiddleware, async (req, res) => {
-    const filter = req.query.filter
+    const filter = req.query.filter || ''; // Default to empty string if no filter is provided
 
-    const users = await User.find({
-        $or: [
-            {
-                first_name:{"$regex": filter}
-            }, 
-            {
-                last_name: {"$regex": filter}
-            }
-        ]
-    })
+    try {
+        // Fetch users based on filter
+        const users = filter ? await User.find({
+            $or: [
+                { first_name: { $regex: filter, $options: 'i' } }, // Case-insensitive regex search
+                { last_name: { $regex: filter, $options: 'i' } }
+            ]
+        }): await User.find({});
 
-    res.json({
-        user: users.map(user => ({
-            user_email: user.user_email,
-            first_name: user.first_name,
-            last_name: user.last_name,
-            _id: user._id
-        }))
-    })
-})
+        // Map and send the filtered users
+        res.json({
+            users: users.map(user => ({
+                user_email: user.user_email,
+                first_name: user.first_name,
+                last_name: user.last_name,
+                _id: user._id
+            }))
+        });
+    } catch (error) {
+        // Handle errors
+        res.status(500).json({ message: "An error occurred", error });
+    }
+});
+
+
 
 module.exports = router

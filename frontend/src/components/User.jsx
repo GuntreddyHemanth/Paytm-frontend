@@ -3,7 +3,6 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { Button } from "./Button"
 
-
 export const User = () => {
     const [filter, setFilter] = useState("")
     const [users, setUsers] = useState([])
