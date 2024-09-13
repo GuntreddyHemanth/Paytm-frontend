@@ -4,6 +4,7 @@ import { Signin } from './pages/Signin'
 import { Dashboard } from './pages/Dashboard'
 import { SendMoney } from './pages/Sendmoney'
 import { Welcome } from './pages/Welcome'
+import { Transcation } from './pages/Transcation'
 
 function App() {
 
@@ -16,6 +17,7 @@ function App() {
           <Route path="/signin" element={<Signin/>}/>
           <Route path="/dashboard" element={<Dashboard/>}/>
           <Route path="/send" element={<SendMoney/>}/>
+          <Route path="/transaction" element={<Transcation/>}/>
        </Routes>
     </BrowserRouter>
     </>
