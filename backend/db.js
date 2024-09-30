@@ -1,10 +1,8 @@
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 
-// Load environment variables
-dotenv.config();  // Load the .env file
+dotenv.config();  
 
-// MongoDB connection string from the environment variable
 const mongoUrl = process.env.MONGODB_URL;
 
 if (!mongoUrl) {
@@ -30,21 +28,21 @@ const connectDB = async () => {
 const UserSchema = new mongoose.Schema({
     first_name: {
         type: String,
-        required: true  // Corrected 'required'
+        required: true  
     },
     last_name: {
         type: String,
-        required: true  // Corrected 'required'
+        required: true 
     },
     user_email: {
         type: String,
-        required: true,  // Corrected 'required'
+        required: true, 
         unique: true,    // Add unique constraint for email
         match: [/.+\@.+\..+/, 'Invalid email format']  // Add basic email validation
     },
     password: {
         type: String,
-        required: true  // Corrected 'required'
+        required: true 
     }
 });
 
@@ -53,11 +51,11 @@ const accountSchema = new mongoose.Schema({
     UserId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true  // Corrected 'required'
+        required: true 
     },
     balance: {
         type: Number,
-        required: true  // Corrected 'required'
+        required: true  
     }
 });
 
@@ -65,7 +63,6 @@ const accountSchema = new mongoose.Schema({
 const Account = mongoose.model("Account", accountSchema);
 const User = mongoose.model("User", UserSchema);
 
-// Exporting Models
 module.exports = {
     User,
     Account,

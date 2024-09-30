@@ -1,4 +1,7 @@
+const dotenv = require("dotenv");
+
+dotenv.config();  
+
 module.exports = {
-    JWt_SECRET : "Niketha-Swetty"
-    
-}
+    JWT_SECRET: process.env.JWT_SECRET 
+};
